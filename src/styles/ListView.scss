@@ -1,0 +1,15 @@
+.searchBar{
+    width: 100%;
+    height: fit-content;
+    background-color: rgb(241, 231, 222);
+    padding: 15px 5px;
+    border-radius: 5px; 
+    display: flex;
+    justify-content: left;    
+
+    & span {
+        display : flex;
+        align-items: center;
+        margin-left: 2rem;
+    }
+}
