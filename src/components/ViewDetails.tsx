@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/ViewDetails.scss";
-import { calculateAge } from "../utils/dob-to-age.util";
+import { calculateAge } from "../utils/calculate-age.util";
 import Modal from "./Modal";
-import { isEmptyBindingPattern } from "typescript";
 
 function ViewDetails(props: {
   celebrities: any;
@@ -36,6 +35,7 @@ function ViewDetails(props: {
     setModalOpen(false);
   };
 
+  console.log(isEditState);
   const handleYesClick = () => {
     setModalOpen(false);
     setEditState(false);

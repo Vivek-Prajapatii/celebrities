@@ -5,6 +5,7 @@ import celebrities from "../json/celebrities.json";
 
 function ListView() {
   const [isActive, setActive] = useState(Array(celebrities.length).fill(false));
+  const [isEdit, setEdit] = useState(false);
 
   const handleAccordionClick = (index: any) => {
     const newState = isActive.map((state, i) => (i === index ? !state : false));
@@ -25,6 +26,8 @@ function ListView() {
                   celebrities={celebrity}
                   onClick={() => handleAccordionClick(celebrity?.id)}
                   isActive={isActive[index + 1]}
+                  setEdit={setEdit}
+                  isEdit={isEdit}
                 />
               </>
             );

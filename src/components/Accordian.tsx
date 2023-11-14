@@ -1,5 +1,5 @@
 import "../styles/Accordian.scss";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ViewDetails from "./ViewDetails";
 import "../styles/Accordian.scss";
 
@@ -7,13 +7,20 @@ function Accordian(props: {
   celebrities: any;
   onClick: Function;
   isActive: any[];
+  setEdit: Function;
+  isEdit: boolean;
 }) {
-  const { celebrities, onClick, isActive } = props;
-
+  const { celebrities, onClick, isActive, setEdit, isEdit } = props;
   const { first, last, picture, id } = celebrities;
   const [isEditState, setEditState] = useState(false);
   const [isUpdated, setUpdated] = useState(false);
   const [areEmpty, setEmpty] = useState(false);
+
+  useEffect(() => {
+    if (isEditState) {
+      setEdit(true);
+    } else setEdit(false);
+  }, [isEditState]);
 
   return (
     <div className="accordion">
@@ -55,9 +62,7 @@ function Accordian(props: {
               className={`div-${id}`}
               style={{ paddingLeft: "1rem", paddingRight: "2rem" }}
               onClick={() => {
-                if (!isEditState) {
-                  onClick();
-                }
+                !isEdit && onClick();
               }}
               title={isEditState ? "Save or Discard the unsaved changes" : ""}
             >
