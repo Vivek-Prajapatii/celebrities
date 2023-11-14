@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/ListView.scss";
 import Accordian from "./Accordian";
 import celebrities from "../json/celebrities.json";
