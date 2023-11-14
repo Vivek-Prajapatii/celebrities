@@ -30,8 +30,12 @@ const Modal = (props: {
           <span>{message}</span>
         </div>
         <div className="modal-button">
-          <button onClick={() => onClose()}>{noPlaceholder}</button>
-          <button onClick={() => onYes()}>{yesPlaceholder}</button>
+          {noPlaceholder && (
+            <button onClick={() => onClose()}>{noPlaceholder}</button>
+          )}
+          {yesPlaceholder && (
+            <button onClick={() => onYes()}>{yesPlaceholder}</button>
+          )}
         </div>
       </div>
     </div>

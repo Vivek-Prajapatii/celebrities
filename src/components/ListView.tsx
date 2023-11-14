@@ -13,7 +13,7 @@ function ListView() {
         {celebrities &&
           celebrities.map((celebrity) => (
             <>
-              <Accordian celebrities={celebrity} />
+              <Accordian celebrities={celebrity}/>
             </>
           ))}
       </div>

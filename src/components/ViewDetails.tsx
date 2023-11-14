@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/ViewDetails.scss";
 import { calculateAge } from "../utils/dob-to-age.util";
 import Modal from "./Modal";
+import { isEmptyBindingPattern } from "typescript";
 
 function ViewDetails(props: {
   celebrities: any;
@@ -9,15 +10,23 @@ function ViewDetails(props: {
   setEditState: Function;
   isUpdated: boolean;
   setUpdated: Function;
+  setEmpty: Function;
+  areEmpty: boolean;
 }) {
-  const { celebrities, isEditState, setEditState, isUpdated, setUpdated } =
-    props;
+  const {
+    celebrities,
+    isEditState,
+    setEditState,
+    isUpdated,
+    setUpdated,
+    setEmpty,
+    areEmpty,
+  } = props;
   const { description, country, gender, dob } = celebrities;
   const age = calculateAge(dob);
 
-  // const [isDeleteClicked, setDeleteClicked] = useState<boolean>(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  // const [isUpdated, setUpdated] = useState(false);
+  const [discard, setDiscard] = useState(false);
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -32,12 +41,29 @@ function ViewDetails(props: {
     setEditState(false);
   };
 
-  if (isModalOpen) {
-    const message = !isEditState
-      ? "Are you sure you want to delete?"
-      : "Are you sure you want to discard the changes?";
+  useEffect(() => {
+    if (discard) {
+      setModalOpen(true);
+    }
+  }, [discard]);
 
-    const yesPlaceholder = isEditState ? "Discard" : "Delete";
+  const validateEmpty = () => {
+    setModalOpen(true);
+  };
+
+  if (isModalOpen) {
+    let message = "";
+    let yesPlaceholder = "";
+    if (!isEditState) {
+      message = "Are you sure you want to delete?";
+      yesPlaceholder = "Delete";
+    } else if (discard) {
+      message = "Are you sure you want to discard the changes?";
+      yesPlaceholder = "Discard";
+    } else if (areEmpty) {
+      message = "All fields are mandatory to fill";
+      yesPlaceholder = "";
+    }
 
     return (
       <>
@@ -75,12 +101,15 @@ function ViewDetails(props: {
                 <select
                   name="gender"
                   id="gender"
+                  required
                   className="edit-input"
                   onChange={() => setUpdated(true)}
                 >
                   <option value="male">Male</option>
                   <option value="female">Female</option>
-                  <option value="other">Rather Not Say</option>
+                  <option value="female">Transgender</option>
+                  <option value="rather not say">Rather Not Say</option>
+                  <option value="other">Other</option>
                 </select>
               </>
             ) : (
@@ -92,9 +121,15 @@ function ViewDetails(props: {
             {isEditState ? (
               <input
                 type="text"
+                required
                 className="edit-input"
                 defaultValue={country}
-                onChange={() => setUpdated(true)}
+                onChange={(e) => {
+                  setUpdated(true);
+                  if (e.target.value === "") {
+                    setEmpty(true);
+                  }
+                }}
               />
             ) : (
               <span>{country}</span>
@@ -109,7 +144,13 @@ function ViewDetails(props: {
             <textarea
               className={"edit-description"}
               rows={6}
-              onChange={() => setUpdated(true)}
+              required
+              onChange={(e) => {
+                setUpdated(true);
+                if (e.target.value === "") {
+                  setEmpty(true);
+                }
+              }}
             >
               {description}
             </textarea>
@@ -118,31 +159,42 @@ function ViewDetails(props: {
           )}
 
           <div className="update">
-            <button
-              type="button"
-              className={
-                isEditState ? "icon-button-cancel" : "icon-button-delete"
-              }
-              onClick={() => setModalOpen(true)}
-            ></button>
             {!isEditState ? (
-              <button
-                type={"button"}
-                className={"icon-button-edit"}
-                disabled={age && age > 18 ? false : true}
-                onClick={() => {
-                  setEditState(true);
-                }}
-              ></button>
+              <>
+                <button
+                  type="button"
+                  className={"icon-button-delete"}
+                  onClick={() => setModalOpen(true)}
+                ></button>
+                <button
+                  type={"button"}
+                  className={"icon-button-edit"}
+                  disabled={age && age > 18 ? false : true}
+                  onClick={() => {
+                    setEditState(true);
+                  }}
+                ></button>
+              </>
             ) : (
-              <button
-                type={"button"}
-                className={"icon-button-correct"}
-                disabled={!isUpdated}
-                onClick={() => {
-                  setEditState(false);
-                }}
-              ></button>
+              <>
+                <button
+                  type="button"
+                  className={"icon-button-cancel"}
+                  onClick={() => {
+                    isUpdated ? setDiscard(true) : setEditState(false);
+                  }}
+                ></button>
+                <button
+                  type={"submit"}
+                  className={"icon-button-correct"}
+                  disabled={!isUpdated}
+                  onClick={() => {
+                    if (setEmpty) {
+                      validateEmpty();
+                    } else setEditState(false);
+                  }}
+                ></button>
+              </>
             )}
           </div>
         </div>
