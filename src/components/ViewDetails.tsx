@@ -47,20 +47,21 @@ function ViewDetails(props: {
     }
   }, [discard]);
 
-  const validateEmpty = () => {
-    setModalOpen(true);
-  };
+  // const validateEmpty = () => {
+  //   setModalOpen(true);
+  // };
 
   if (isModalOpen) {
     let message = "";
     let yesPlaceholder = "";
+
     if (!isEditState) {
       message = "Are you sure you want to delete?";
       yesPlaceholder = "Delete";
     } else if (discard) {
       message = "Are you sure you want to discard the changes?";
       yesPlaceholder = "Discard";
-    } else if (areEmpty) {
+    } else if (isUpdated && areEmpty) {
       message = "All fields are mandatory to fill";
       yesPlaceholder = "";
     }
@@ -151,9 +152,8 @@ function ViewDetails(props: {
                   setEmpty(true);
                 }
               }}
-            >
-              {description}
-            </textarea>
+              defaultValue={description}
+            />
           ) : (
             <span>{description}</span>
           )}
@@ -189,9 +189,9 @@ function ViewDetails(props: {
                   className={"icon-button-correct"}
                   disabled={!isUpdated}
                   onClick={() => {
-                    if (setEmpty) {
-                      validateEmpty();
-                    } else setEditState(false);
+                    if (!areEmpty) {
+                      setEditState(false);
+                    } else setModalOpen(true);
                   }}
                 ></button>
               </>
