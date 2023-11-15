@@ -5,20 +5,17 @@ import famousCelebrities from "../json/celebrities.json";
 import { Celebrity } from "../model/celebrity.model";
 
 function ListView() {
-
   let [celebrities, setCelebrities] = useState<Celebrity[]>(famousCelebrities);
   const [updatedCelebrity, setUpdatedCelebrity] = useState<Celebrity>();
   const [isActive, setActive] = useState(
-    Array(celebrities.length-1).fill(false)
+    Array(celebrities.length - 1).fill(false)
   );
   const [isEdit, setEdit] = useState(false);
   const [isSaved, setSaved] = useState(false);
   const [isDeleted, setDeleted] = useState<number>();
 
   const handleAccordionClick = (index: any) => {
-    const newState = isActive.map((state, i) =>
-      i === index ? !state : false
-    );
+    const newState = isActive.map((state, i) => (i === index ? !state : false));
     setActive(newState);
   };
 
@@ -31,7 +28,7 @@ function ListView() {
     }
   }, [celebrities, isSaved, updatedCelebrity]);
 
-  const filteredCelebs = useMemo(() => {
+  const filteredCelebsNotToBeDeleted = useMemo(() => {
     console.log(isDeleted);
     if (isDeleted) {
       return celebrities.filter((obj) => obj.id !== isDeleted);
@@ -40,19 +37,40 @@ function ListView() {
   }, [isDeleted]);
 
   useEffect(() => {
-    setCelebrities(filteredCelebs);
+    setCelebrities(filteredCelebsNotToBeDeleted);
     setActive(isActive.fill(false));
-  }, [filteredCelebs]);
+  }, [filteredCelebsNotToBeDeleted]);
 
-  console.log(isActive);
+  const [inputText, setInputText] = useState("");
+
+  let inputHandler = (e: any) => {
+    var lowerCase = e.target.value.toLowerCase();
+    setInputText(lowerCase);
+  };
+
+  const filteredCelebs = celebrities.filter((celebs) => {
+    if (inputText === "") {
+      return celebs;
+    } else {
+      return celebs.first.toLowerCase().includes(inputText);
+    }
+  });
+
   return (
     <div style={{ width: "40%", marginTop: "3rem" }}>
       <div className={"searchBar"}>
-        <span>Search</span>
+        <div className="search-icon"></div>
+        <input
+          className={"search-input"}
+          type="text"
+          placeholder="Search...."
+          onChange={inputHandler}
+        />
       </div>
+
       <div>
-        {celebrities &&
-          celebrities?.map((celebrity) => {
+        {filteredCelebs &&
+          filteredCelebs?.map((celebrity) => {
             return (
               <Accordian
                 key={celebrity.id}

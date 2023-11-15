@@ -37,7 +37,6 @@ function Accordian(props: {
     } else setEdit(false);
   }, [isEditState]);
 
-  console.log(isActive);
 
   return (
     <div className="accordion">
