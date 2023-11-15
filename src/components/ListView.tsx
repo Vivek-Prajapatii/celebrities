@@ -1,30 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "../styles/ListView.scss";
 import Accordian from "./Accordian";
-import celebrities from "../json/celebrities.json";
+import famousCelebrities from "../json/celebrities.json";
 import { Celebrity } from "../model/celebrity.model";
 
 function ListView() {
-  const emptyObj = {
-    id: 0,
-    first: "",
-    last: "",
-    dob: "",
-    gender: "",
-    email: "",
-    picture: "",
-    country: "",
-    description: "",
-  };
 
-  // let [celebrities, setCelebrities] = useState<Celebrity[]>(famousCelebrities);
+  let [celebrities, setCelebrities] = useState<Celebrity[]>(famousCelebrities);
   const [updatedCelebrity, setUpdatedCelebrity] = useState<Celebrity>();
-  const [isActive, setActive] = useState(Array(celebrities.length).fill(false));
+  const [isActive, setActive] = useState(
+    Array(celebrities.length-1).fill(false)
+  );
   const [isEdit, setEdit] = useState(false);
   const [isSaved, setSaved] = useState(false);
+  const [isDeleted, setDeleted] = useState<number>();
 
   const handleAccordionClick = (index: any) => {
-    const newState = isActive.map((state, i) => (i === index ? !state : false));
+    const newState = isActive.map((state, i) =>
+      i === index ? !state : false
+    );
     setActive(newState);
   };
 
@@ -33,19 +27,24 @@ function ListView() {
       var indexToUpdate = celebrities.findIndex(
         (obj) => obj.id === updatedCelebrity?.id
       );
-
       celebrities[indexToUpdate] = updatedCelebrity;
     }
   }, [celebrities, isSaved, updatedCelebrity]);
 
-  console.log(updatedCelebrity);
+  const filteredCelebs = useMemo(() => {
+    console.log(isDeleted);
+    if (isDeleted) {
+      return celebrities.filter((obj) => obj.id !== isDeleted);
+    }
+    return celebrities;
+  }, [isDeleted]);
 
-  // useEffect(() => {
-  //   if (famousCelebrities) {
-  //     setCelebrities(famousCelebrities);
-  //   }
-  // }, []);
+  useEffect(() => {
+    setCelebrities(filteredCelebs);
+    setActive(isActive.fill(false));
+  }, [filteredCelebs]);
 
+  console.log(isActive);
   return (
     <div style={{ width: "40%", marginTop: "3rem" }}>
       <div className={"searchBar"}>
@@ -53,18 +52,19 @@ function ListView() {
       </div>
       <div>
         {celebrities &&
-          celebrities?.map((celebrity, index) => {
+          celebrities?.map((celebrity) => {
             return (
               <Accordian
-                key={index}
+                key={celebrity.id}
                 celebrity={celebrity}
                 onClick={() => handleAccordionClick(celebrity?.id)}
-                isActive={isActive[index + 1]}
+                isActive={isActive[celebrity.id]}
                 setEdit={setEdit}
                 isEdit={isEdit}
                 setUpdatedCelebrity={setUpdatedCelebrity}
                 updatedCelebrity={updatedCelebrity}
                 setSaved={setSaved}
+                setDeleted={setDeleted}
               />
             );
           })}

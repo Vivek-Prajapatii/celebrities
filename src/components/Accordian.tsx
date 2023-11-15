@@ -13,6 +13,7 @@ function Accordian(props: {
   setUpdatedCelebrity: Function;
   updatedCelebrity: Celebrity | undefined;
   setSaved: Function;
+  setDeleted: Function;
 }) {
   const {
     celebrity,
@@ -23,6 +24,7 @@ function Accordian(props: {
     setUpdatedCelebrity,
     updatedCelebrity,
     setSaved,
+    setDeleted,
   } = props;
   const { first, last, picture, id } = celebrity;
   const [isEditState, setEditState] = useState(false);
@@ -35,12 +37,7 @@ function Accordian(props: {
     } else setEdit(false);
   }, [isEditState]);
 
-  // updates the updated data in the celebrities list
-  // useEffect(() => {
-  //   if (celebrity) {
-  //     setUpdatedCelebrity(celebrity);
-  //   }
-  // }, [celebrity]);
+  console.log(isActive);
 
   return (
     <div className="accordion">
@@ -116,6 +113,7 @@ function Accordian(props: {
               setUpdatedCelebrity={setUpdatedCelebrity}
               updatedCelebrity={updatedCelebrity}
               setSaved={setSaved}
+              setDeleted={setDeleted}
             />
           </div>
         ) : (

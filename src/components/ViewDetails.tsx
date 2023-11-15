@@ -15,6 +15,7 @@ function ViewDetails(props: {
   updatedCelebrity: Celebrity | undefined;
   setUpdatedCelebrity: Function;
   setSaved: Function;
+  setDeleted: Function;
 }) {
   const {
     celebrities,
@@ -27,8 +28,9 @@ function ViewDetails(props: {
     updatedCelebrity,
     setUpdatedCelebrity,
     setSaved,
+    setDeleted,
   } = props;
-  const { description, country, gender, dob } = celebrities;
+  const { description, country, gender, dob, id } = celebrities;
   const age = calculateAge(dob);
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -39,6 +41,7 @@ function ViewDetails(props: {
   };
 
   const handleYesClick = () => {
+    setDeleted(id);
     setModalOpen(false);
     setEditState(false);
   };
@@ -193,7 +196,9 @@ function ViewDetails(props: {
                 <button
                   type="button"
                   className={"icon-button-delete"}
-                  onClick={() => setModalOpen(true)}
+                  onClick={(e) => {
+                    setModalOpen(true);
+                  }}
                 ></button>
                 <button
                   type={"button"}
