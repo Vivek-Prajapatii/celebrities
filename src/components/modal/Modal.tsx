@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import "../../styles/modal/Modal.scss";
 
 const Modal = (props: {

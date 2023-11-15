@@ -7,13 +7,17 @@ import { Celebrity } from "../model/celebrity.model";
 function ListView() {
   let [celebrities, setCelebrities] = useState<Celebrity[]>(famousCelebrities);
   const [updatedCelebrity, setUpdatedCelebrity] = useState<Celebrity>();
+
+  // manages the state of accordian
   const [isActive, setActive] = useState(
     Array(celebrities.length - 1).fill(false)
   );
   const [isEdit, setEdit] = useState(false);
   const [isSaved, setSaved] = useState(false);
   const [isDeleted, setDeleted] = useState<number>();
+  const [inputText, setInputText] = useState("");
 
+  // toggles the accordian state when clicked on another accordian
   const handleAccordionClick = (index: any) => {
     const newState = isActive.map((state, i) => (i === index ? !state : false));
     setActive(newState);
@@ -28,8 +32,8 @@ function ListView() {
     }
   }, [celebrities, isSaved, updatedCelebrity]);
 
+  // removes the deleted data from json
   const filteredCelebsNotToBeDeleted = useMemo(() => {
-    console.log(isDeleted);
     if (isDeleted) {
       return celebrities.filter((obj) => obj.id !== isDeleted);
     }
@@ -41,13 +45,13 @@ function ListView() {
     setActive(isActive.fill(false));
   }, [filteredCelebsNotToBeDeleted]);
 
-  const [inputText, setInputText] = useState("");
-
+  // contains the search input text
   let inputHandler = (e: any) => {
     var lowerCase = e.target.value.toLowerCase();
     setInputText(lowerCase);
   };
 
+  // filters data from json based on the search input
   const filteredCelebs = celebrities.filter((celebs) => {
     if (inputText === "") {
       return celebs;

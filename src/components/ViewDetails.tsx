@@ -5,7 +5,7 @@ import Modal from "./modal/Modal";
 import { Celebrity } from "../model/celebrity.model";
 
 function ViewDetails(props: {
-  celebrities: Celebrity;
+  celebrity: Celebrity;
   isEditState: boolean;
   setEditState: Function;
   isUpdated: boolean;
@@ -18,7 +18,7 @@ function ViewDetails(props: {
   setDeleted: Function;
 }) {
   const {
-    celebrities,
+    celebrity,
     isEditState,
     setEditState,
     isUpdated,
@@ -30,17 +30,20 @@ function ViewDetails(props: {
     setSaved,
     setDeleted,
   } = props;
-  const { description, country, gender, dob, id } = celebrities;
+  const { description, country, gender, dob, id } = celebrity;
+  // calculates the age from the util function
   const age = calculateAge(dob);
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [discard, setDiscard] = useState(false);
 
+  // callback for on cancel click on modal
   const handleCloseModal = () => {
     setModalOpen(false);
     setEmpty(false);
   };
 
+  // callback for on yes click on modal
   const handleYesClick = () => {
     !discard && setDeleted(id);
     setModalOpen(false);
@@ -58,6 +61,7 @@ function ViewDetails(props: {
     let message = "";
     let yesPlaceholder = "";
 
+    // changes the message of the modal based on different criterias
     if (!isEditState) {
       message = "Are you sure you want to delete?";
       yesPlaceholder = "Delete";
@@ -108,14 +112,16 @@ function ViewDetails(props: {
                   required
                   className="edit-input"
                   onChange={(e) => {
+                    setEmpty(false);
                     setUpdated(true);
+                    // stores the updated data and populates on text field
                     updatedCelebrity
                       ? setUpdatedCelebrity({
                           ...updatedCelebrity,
                           gender: e.target.value,
                         })
                       : setUpdatedCelebrity({
-                          ...celebrities,
+                          ...celebrity,
                           gender: e.target.value,
                         });
                   }}
@@ -146,17 +152,17 @@ function ViewDetails(props: {
                     setEmpty(true);
                   }
                   // Checks for numbers in input
-                  else if(/\d/.test(e.target.value)) { 
+                  else if (/\d/.test(e.target.value)) {
                     alert("Number not allowed in Country name");
-                  } 
-                  else {
+                  } else {
+                    // stores the updated data and populates on text field
                     updatedCelebrity
                       ? setUpdatedCelebrity({
                           ...updatedCelebrity,
                           country: e.target.value,
                         })
                       : setUpdatedCelebrity({
-                          ...celebrities,
+                          ...celebrity,
                           country: e.target.value,
                         });
                   }
@@ -177,18 +183,20 @@ function ViewDetails(props: {
               rows={6}
               required
               onChange={(e) => {
+                setEmpty(false);
                 setUpdated(true);
                 if (e.target.value === "") {
                   setEmpty(true);
                 } else {
+                  // stores the updated data and populates on text field
                   updatedCelebrity
                     ? setUpdatedCelebrity({
                         ...updatedCelebrity,
-                        description: e.target.value,
+                        description: e.target.value ?? "",
                       })
                     : setUpdatedCelebrity({
-                        ...celebrities,
-                        description: e.target.value,
+                        ...celebrity,
+                        description: e.target.value ?? "",
                       });
                 }
               }}
@@ -234,6 +242,7 @@ function ViewDetails(props: {
                     if (!areEmpty) {
                       setSaved(true);
                       setEditState(false);
+                      setUpdated(false);
                     } else setModalOpen(true);
                   }}
                 ></button>

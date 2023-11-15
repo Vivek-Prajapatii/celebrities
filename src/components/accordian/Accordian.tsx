@@ -62,6 +62,7 @@ function Accordian(props: {
                   defaultValue={`${first} ${last}`}
                   className="edit-input"
                   onChange={(e) => {
+                    setEmpty(false);
                     setUpdated(true);
                     if (e.target.value === "") {
                       setEmpty(true);
@@ -103,7 +104,7 @@ function Accordian(props: {
         {isActive ? (
           <div>
             <ViewDetails
-              celebrities={celebrity}
+              celebrity={celebrity}
               isEditState={isEditState}
               setEditState={setEditState}
               setUpdated={setUpdated}
