@@ -140,6 +140,7 @@ function ViewDetails(props: {
                 className="edit-input"
                 defaultValue={country}
                 onChange={(e) => {
+                  setEmpty(false);
                   setUpdated(true);
                   if (e.target.value === "") {
                     setEmpty(true);
