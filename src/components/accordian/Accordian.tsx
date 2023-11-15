@@ -1,8 +1,7 @@
-import "../styles/Accordian.scss";
 import React, { useEffect, useState } from "react";
-import ViewDetails from "./ViewDetails";
-import "../styles/Accordian.scss";
-import { Celebrity } from "../model/celebrity.model";
+import ViewDetails from "../ViewDetails";
+import "../../styles/accordian/Accordian.scss";
+import { Celebrity } from "../../model/celebrity.model";
 
 function Accordian(props: {
   celebrity: Celebrity;
@@ -36,7 +35,6 @@ function Accordian(props: {
       setEdit(true);
     } else setEdit(false);
   }, [isEditState]);
-
 
   return (
     <div className="accordion">

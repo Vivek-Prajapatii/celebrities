@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/ViewDetails.scss";
 import { calculateAge } from "../utils/calculate-age.util";
-import Modal from "./Modal";
+import Modal from "./modal/Modal";
 import { Celebrity } from "../model/celebrity.model";
 
 function ViewDetails(props: {
@@ -38,12 +38,14 @@ function ViewDetails(props: {
 
   const handleCloseModal = () => {
     setModalOpen(false);
+    setEmpty(false);
   };
 
   const handleYesClick = () => {
-    setDeleted(id);
+    !discard && setDeleted(id);
     setModalOpen(false);
     setEditState(false);
+    setDiscard(false);
   };
 
   useEffect(() => {

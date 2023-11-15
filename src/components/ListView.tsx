@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "../styles/ListView.scss";
-import Accordian from "./Accordian";
+import Accordian from "./accordian/Accordian";
 import famousCelebrities from "../json/celebrities.json";
 import { Celebrity } from "../model/celebrity.model";
 
