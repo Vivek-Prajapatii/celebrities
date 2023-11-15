@@ -143,7 +143,12 @@ function ViewDetails(props: {
                   setUpdated(true);
                   if (e.target.value === "") {
                     setEmpty(true);
-                  } else {
+                  }
+                  // Checks for numbers in input
+                  else if(/\d/.test(e.target.value)) { 
+                    alert("Number not allowed in Country name");
+                  } 
+                  else {
                     updatedCelebrity
                       ? setUpdatedCelebrity({
                           ...updatedCelebrity,

@@ -65,18 +65,21 @@ function Accordian(props: {
                     setUpdated(true);
                     if (e.target.value === "") {
                       setEmpty(true);
+                    } else if (/\d/.test(e.target.value)) {
+                      // checks for number in text field
+                      alert("Number not allowed in name");
                     } else {
                       const name = e.target.value.split(" ");
                       updatedCelebrity
                         ? setUpdatedCelebrity({
                             ...updatedCelebrity,
                             first: name[0],
-                            last: name[1],
+                            last: name[1] ?? "",
                           })
                         : setUpdatedCelebrity({
                             ...celebrity,
                             first: name[0],
-                            last: name[1],
+                            last: name[1] ?? "",
                           });
                     }
                   }}
