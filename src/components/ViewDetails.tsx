@@ -2,15 +2,19 @@ import React, { useState, useEffect } from "react";
 import "../styles/ViewDetails.scss";
 import { calculateAge } from "../utils/calculate-age.util";
 import Modal from "./Modal";
+import { Celebrity } from "../model/celebrity.model";
 
 function ViewDetails(props: {
-  celebrities: any;
+  celebrities: Celebrity;
   isEditState: boolean;
   setEditState: Function;
   isUpdated: boolean;
   setUpdated: Function;
   setEmpty: Function;
   areEmpty: boolean;
+  updatedCelebrity: Celebrity | undefined;
+  setUpdatedCelebrity: Function;
+  setSaved: Function;
 }) {
   const {
     celebrities,
@@ -20,6 +24,9 @@ function ViewDetails(props: {
     setUpdated,
     setEmpty,
     areEmpty,
+    updatedCelebrity,
+    setUpdatedCelebrity,
+    setSaved,
   } = props;
   const { description, country, gender, dob } = celebrities;
   const age = calculateAge(dob);
@@ -27,15 +34,10 @@ function ViewDetails(props: {
   const [isModalOpen, setModalOpen] = useState(false);
   const [discard, setDiscard] = useState(false);
 
-  const handleOpenModal = () => {
-    setModalOpen(true);
-  };
-
   const handleCloseModal = () => {
     setModalOpen(false);
   };
 
-  console.log(isEditState);
   const handleYesClick = () => {
     setModalOpen(false);
     setEditState(false);
@@ -46,10 +48,6 @@ function ViewDetails(props: {
       setModalOpen(true);
     }
   }, [discard]);
-
-  // const validateEmpty = () => {
-  //   setModalOpen(true);
-  // };
 
   if (isModalOpen) {
     let message = "";
@@ -89,7 +87,7 @@ function ViewDetails(props: {
               <input
                 className="edit-input"
                 type="text"
-                value={age?.toString() || ""}
+                defaultValue={age?.toString() || ""}
               />
             ) : (
               <span>{age} Years</span>
@@ -104,11 +102,22 @@ function ViewDetails(props: {
                   id="gender"
                   required
                   className="edit-input"
-                  onChange={() => setUpdated(true)}
+                  onChange={(e) => {
+                    setUpdated(true);
+                    updatedCelebrity
+                      ? setUpdatedCelebrity({
+                          ...updatedCelebrity,
+                          gender: e.target.value,
+                        })
+                      : setUpdatedCelebrity({
+                          ...celebrities,
+                          gender: e.target.value,
+                        });
+                  }}
                 >
                   <option value="male">Male</option>
                   <option value="female">Female</option>
-                  <option value="female">Transgender</option>
+                  <option value="transgender">Transgender</option>
                   <option value="rather not say">Rather Not Say</option>
                   <option value="other">Other</option>
                 </select>
@@ -129,6 +138,16 @@ function ViewDetails(props: {
                   setUpdated(true);
                   if (e.target.value === "") {
                     setEmpty(true);
+                  } else {
+                    updatedCelebrity
+                      ? setUpdatedCelebrity({
+                          ...updatedCelebrity,
+                          country: e.target.value,
+                        })
+                      : setUpdatedCelebrity({
+                          ...celebrities,
+                          country: e.target.value,
+                        });
                   }
                 }}
               />
@@ -150,6 +169,16 @@ function ViewDetails(props: {
                 setUpdated(true);
                 if (e.target.value === "") {
                   setEmpty(true);
+                } else {
+                  updatedCelebrity
+                    ? setUpdatedCelebrity({
+                        ...updatedCelebrity,
+                        description: e.target.value,
+                      })
+                    : setUpdatedCelebrity({
+                        ...celebrities,
+                        description: e.target.value,
+                      });
                 }
               }}
               defaultValue={description}
@@ -190,6 +219,7 @@ function ViewDetails(props: {
                   disabled={!isUpdated}
                   onClick={() => {
                     if (!areEmpty) {
+                      setSaved(true);
                       setEditState(false);
                     } else setModalOpen(true);
                   }}

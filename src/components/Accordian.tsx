@@ -2,16 +2,29 @@ import "../styles/Accordian.scss";
 import React, { useEffect, useState } from "react";
 import ViewDetails from "./ViewDetails";
 import "../styles/Accordian.scss";
+import { Celebrity } from "../model/celebrity.model";
 
 function Accordian(props: {
-  celebrities: any;
+  celebrity: Celebrity;
   onClick: Function;
   isActive: any[];
   setEdit: Function;
   isEdit: boolean;
+  setUpdatedCelebrity: Function;
+  updatedCelebrity: Celebrity | undefined;
+  setSaved: Function;
 }) {
-  const { celebrities, onClick, isActive, setEdit, isEdit } = props;
-  const { first, last, picture, id } = celebrities;
+  const {
+    celebrity,
+    onClick,
+    isActive,
+    setEdit,
+    isEdit,
+    setUpdatedCelebrity,
+    updatedCelebrity,
+    setSaved,
+  } = props;
+  const { first, last, picture, id } = celebrity;
   const [isEditState, setEditState] = useState(false);
   const [isUpdated, setUpdated] = useState(false);
   const [areEmpty, setEmpty] = useState(false);
@@ -21,6 +34,13 @@ function Accordian(props: {
       setEdit(true);
     } else setEdit(false);
   }, [isEditState]);
+
+  // updates the updated data in the celebrities list
+  // useEffect(() => {
+  //   if (celebrity) {
+  //     setUpdatedCelebrity(celebrity);
+  //   }
+  // }, [celebrity]);
 
   return (
     <div className="accordion">
@@ -51,6 +71,19 @@ function Accordian(props: {
                     setUpdated(true);
                     if (e.target.value === "") {
                       setEmpty(true);
+                    } else {
+                      const name = e.target.value.split(" ");
+                      updatedCelebrity
+                        ? setUpdatedCelebrity({
+                            ...updatedCelebrity,
+                            first: name[0],
+                            last: name[1],
+                          })
+                        : setUpdatedCelebrity({
+                            ...celebrity,
+                            first: name[0],
+                            last: name[1],
+                          });
                     }
                   }}
                 />
@@ -73,13 +106,16 @@ function Accordian(props: {
         {isActive ? (
           <div>
             <ViewDetails
-              celebrities={celebrities}
+              celebrities={celebrity}
               isEditState={isEditState}
               setEditState={setEditState}
               setUpdated={setUpdated}
               isUpdated={isUpdated}
               setEmpty={setEmpty}
               areEmpty={areEmpty}
+              setUpdatedCelebrity={setUpdatedCelebrity}
+              updatedCelebrity={updatedCelebrity}
+              setSaved={setSaved}
             />
           </div>
         ) : (
