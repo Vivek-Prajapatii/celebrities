@@ -96,7 +96,8 @@ function ViewDetails(props: {
               <input
                 className="edit-input"
                 type="text"
-                defaultValue={age?.toString() || ""}
+                defaultValue={age?.toString()}
+                disabled
               />
             ) : (
               <span>{age} Years</span>
